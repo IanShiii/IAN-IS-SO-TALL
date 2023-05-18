@@ -42,6 +42,8 @@ public interface Settings {
 
         boolean USING_GYRO = true;
 
+        Object PID = null;
+
         public interface Motion {
 
             DifferentialDriveKinematics KINEMATICS = new DifferentialDriveKinematics(TRACK_WIDTH);
@@ -126,5 +128,7 @@ public interface Settings {
             boolean GRAYHILL_INVERTED = true;
         }
     }
+
+	String DrivetrainPID = null;
     
 }
