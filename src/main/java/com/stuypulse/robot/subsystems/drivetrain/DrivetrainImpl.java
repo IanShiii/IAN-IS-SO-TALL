@@ -1,14 +1,15 @@
 package com.stuypulse.robot.subsystems.drivetrain;
 import com.stuypulse.robot.constants.Ports;
+import com.stuypulse.stuylib.control.feedback.PIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
+import com.stuypulse.robot.constants.Settings;
 
 public class DrivetrainImpl extends Drivetrain{
     
@@ -17,10 +18,11 @@ public class DrivetrainImpl extends Drivetrain{
 
     private final CANSparkMax[] leftMotors;
     private final CANSparkMax[] rightMotors;
-    private final DifferentialDrive DD;
+    private final DifferentialDrive differentialDrive;
     private final DoubleSolenoid doubleSolenoid;
     private final CANSparkMax elPro;
     private final RelativeEncoder Pro52;
+    private final PIDController PIDController;
     private Gear gear;
 
     public DrivetrainImpl() {
@@ -37,10 +39,11 @@ public class DrivetrainImpl extends Drivetrain{
             new CANSparkMax(Ports.Drivetrain.RIGHT_BOTTOM, MotorType.kBrushless),
         };
 
-        DD = new DifferentialDrive(new MotorControllerGroup(leftMotors), new MotorControllerGroup(rightMotors));
+        differentialDrive = new DifferentialDrive(new MotorControllerGroup(leftMotors), new MotorControllerGroup(rightMotors));
         doubleSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 0, 1);
         elPro = new CANSparkMax(0, MotorType.kBrushless);
         Pro52 = elPro.getEncoder();
+        PIDController = new PIDController(Settings.Drivetrain.Motion.PID.kP, Settings.Drivetrain.Motion.PID.kI, Settings.Drivetrain.Motion.PID.kD);
     }
 
     public static enum Gear {
@@ -62,10 +65,8 @@ public class DrivetrainImpl extends Drivetrain{
 
     @Override
     public void arcadeDrive(double speed, double rotation) {
-        DD.arcadeDrive(speed, rotation);
+        differentialDrive.arcadeDrive(speed, rotation);
     }
-
-    @Override
     
 }
 
