@@ -6,8 +6,10 @@
 package com.stuypulse.robot;
 
 import com.stuypulse.robot.commands.auton.DoNothingAuton;
+import com.stuypulse.robot.commands.drivetrain.DrivetrainDriveDistance;
 import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.subsystems.Pump;
+import com.stuypulse.robot.subsystems.drivetrain.Drivetrain;
 import com.stuypulse.stuylib.input.Gamepad;
 import com.stuypulse.stuylib.input.gamepads.AutoGamepad;
 
@@ -23,6 +25,7 @@ public class RobotContainer {
     
     // Subsystem
     Pump pump = new Pump();
+    public final Drivetrain drivetrain = Drivetrain.getInstance();
 
     // Autons
     private static SendableChooser<Command> autonChooser = new SendableChooser<>();
@@ -45,7 +48,9 @@ public class RobotContainer {
     /*** BUTTONS ***/
     /***************/
 
-    private void configureButtonBindings() {}
+    private void configureButtonBindings() {
+        driver.getLeftTriggerButton().onTrue(new DrivetrainDriveDistance(5));
+    }
 
     /**************/
     /*** AUTONS ***/
