@@ -73,16 +73,16 @@ public class DrivetrainImpl extends Drivetrain{
     }
 
     @Override
-    protected double getLeftDistance() {
+    public double getLeftDistance() {
         return leftGrayhill.getDistance();
     }
 
-    protected double getRightDistance() {
+    public double getRightDistance() {
         return rightGrayhill.getDistance();
     }
 
     @Override
-    protected void setVoltages(double leftVoltages, double rightVoltages) {
+    public void setVoltages(double leftVoltages, double rightVoltages) {
         for (CANSparkMax motor : leftMotors) {
             motor.setVoltage(leftVoltages);
         }

@@ -22,13 +22,9 @@ public abstract class Drivetrain extends SubsystemBase {
     }
 
     private final SmartNumber targetDistance;
-    private final PIDController leftController;
-    private final PIDController rightController;
 
     protected Drivetrain() {
         targetDistance = new SmartNumber("Target Distance", 0);
-        leftController = new PIDController(Settings.Drivetrain.Motion.PID.kP, Settings.Drivetrain.Motion.PID.kI, Settings.Drivetrain.Motion.PID.kD);
-        rightController = new PIDController(Settings.Drivetrain.Motion.PID.kP, Settings.Drivetrain.Motion.PID.kI, Settings.Drivetrain.Motion.PID.kD);
     }
 
     public void setTargetDistance(double targetDistance) {
@@ -41,15 +37,8 @@ public abstract class Drivetrain extends SubsystemBase {
 
     public abstract void setGear(Gear gear);
 
-    protected abstract void setVoltages(double leftVoltages, double rightVoltages);
-    protected abstract double getLeftDistance();
-    protected abstract double getRightDistance();
+    public abstract void setVoltages(double leftVoltages, double rightVoltages);
+    public abstract double getLeftDistance();
+    public abstract double getRightDistance();
 
-    @Override
-    public final void periodic() {
-        
-        setVoltages(leftController.update(getTargetDistance(), getLeftDistance()), rightController.update(getTargetDistance(), getRightDistance()));
-
-        SmartDashboard.putNumber("Target Distance", getTargetDistance());
-    }
 }
