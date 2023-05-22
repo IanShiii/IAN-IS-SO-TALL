@@ -5,7 +5,6 @@ import com.stuypulse.robot.subsystems.drivetrain.Drivetrain;
 import com.stuypulse.robot.subsystems.drivetrain.DrivetrainImpl.Gear;
 import com.stuypulse.stuylib.control.feedback.PIDController;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class DrivetrainDriveDistance extends CommandBase{
@@ -29,14 +28,11 @@ public class DrivetrainDriveDistance extends CommandBase{
 
     @Override
     public void initialize() {
-        drivetrain.setTargetDistance(targetDistance);
         drivetrain.setGear(Gear.LOW);
     }
 
     @Override 
     public void execute() {
-        drivetrain.setVoltages(leftController.update(drivetrain.getTargetDistance(), drivetrain.getLeftDistance()), rightController.update(drivetrain.getTargetDistance(), drivetrain.getRightDistance()));
-
-        SmartDashboard.putNumber("Target Distance", drivetrain.getTargetDistance());
+        drivetrain.setVoltages(leftController.update(targetDistance, drivetrain.getLeftDistance()), rightController.update(targetDistance, drivetrain.getRightDistance()));
     }
 }
