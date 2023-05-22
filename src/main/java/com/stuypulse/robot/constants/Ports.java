@@ -53,7 +53,7 @@ public interface Ports {
         int RIGHT_MIDDLE = 14;
         int RIGHT_BOTTOM = 15;
 
-        // Soleniods
+        // Solenoids
         int GEAR_SHIFT_FORWARD = 0;
         int GEAR_SHIFT_REVERSE = 1;
     }
@@ -71,7 +71,7 @@ public interface Ports {
         // Motors
         int MOTOR = 40;
 
-        // Soleniods
+        // Solenoids
         int SOLENOID_FORWARD = 2;
         int SOLENOID_REVERSE = 3;
     }

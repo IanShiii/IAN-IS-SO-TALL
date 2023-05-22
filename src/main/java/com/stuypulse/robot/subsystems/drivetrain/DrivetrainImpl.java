@@ -1,15 +1,18 @@
 package com.stuypulse.robot.subsystems.drivetrain;
 import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.stuylib.control.feedback.PIDController;
+import com.stuypulse.stuylib.network.SmartNumber;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import com.stuypulse.robot.constants.Settings;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 
 public class DrivetrainImpl extends Drivetrain{
     
@@ -18,11 +21,17 @@ public class DrivetrainImpl extends Drivetrain{
 
     private final CANSparkMax[] leftMotors;
     private final CANSparkMax[] rightMotors;
+    
     private final DifferentialDrive differentialDrive;
     private final DoubleSolenoid doubleSolenoid;
-    private final CANSparkMax elPro;
-    private final RelativeEncoder Pro52;
-    private final PIDController PIDController;
+    
+    private final Encoder leftGrayhill;  
+    private final Encoder rightGrayhill;
+
+    private final SmartNumber targetDistance;
+    private final PIDController leftController;
+    private final PIDController rightController;
+
     private Gear gear;
 
     public DrivetrainImpl() {
@@ -41,9 +50,19 @@ public class DrivetrainImpl extends Drivetrain{
 
         differentialDrive = new DifferentialDrive(new MotorControllerGroup(leftMotors), new MotorControllerGroup(rightMotors));
         doubleSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 0, 1);
-        elPro = new CANSparkMax(0, MotorType.kBrushless);
-        Pro52 = elPro.getEncoder();
-        PIDController = new PIDController(Settings.Drivetrain.Motion.PID.kP, Settings.Drivetrain.Motion.PID.kI, Settings.Drivetrain.Motion.PID.kD);
+
+        leftController = new PIDController(Settings.Drivetrain.Motion.PID.kP, Settings.Drivetrain.Motion.PID.kI, Settings.Drivetrain.Motion.PID.kD);
+        rightController = new PIDController(Settings.Drivetrain.Motion.PID.kP, Settings.Drivetrain.Motion.PID.kI, Settings.Drivetrain.Motion.PID.kD);
+        
+
+        leftGrayhill = new Encoder(Ports.Grayhill.LEFT_A, Ports.Grayhill.LEFT_B);
+        rightGrayhill = new Encoder(Ports.Grayhill.RIGHT_A, Ports.Grayhill.RIGHT_B);
+
+        leftGrayhill.setReverseDirection(
+                Settings.Drivetrain.Encoders.GRAYHILL_INVERTED);
+                
+        rightGrayhill.setReverseDirection(
+                Settings.Drivetrain.Encoders.GRAYHILL_INVERTED);
     }
 
     public static enum Gear {
@@ -63,10 +82,39 @@ public class DrivetrainImpl extends Drivetrain{
         this.gear = gear;
     }
 
-    @Override
-    public void arcadeDrive(double speed, double rotation) {
-        differentialDrive.arcadeDrive(speed, rotation);
+    private double getLeftDistance() {
+        return leftGrayhill.getDistance();
     }
     
+    private double getRightDistance() {
+        return rightGrayhill.getDistance();
+    } 
+
+    @Override
+    public void setVoltages(double leftVoltages, double rightVoltages) {
+        for (CANSparkMax motor : leftMotors) {
+            motor.set(leftVoltages);
+        }
+        for (CANSparkMax motor : rightMotors) {
+            motor.set(rightVoltages);
+        }
+    }
+
+    public void setTargetDistance(double targetDistance) {
+        this.targetDistance.set(targetDistance);
+    }
+
+    public double getTargetDistance() {
+        return targetDistance.get();
+    }
+
+    @Override
+    public final void periodic() {
+        
+        setVoltages(leftController.update(getTargetDistance(), getLeftDistance()), rightController.update(getTargetDistance(), getRightDistance()));
+
+        SmartDashboard.putNumber("Target Distance", getLeftDistance());
+    }
+     
 }
 
