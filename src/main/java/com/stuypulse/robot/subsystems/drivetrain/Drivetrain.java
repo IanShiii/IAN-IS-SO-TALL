@@ -24,4 +24,6 @@ public abstract class Drivetrain extends SubsystemBase {
     public abstract double getLeftDistance();
     public abstract double getRightDistance();
 
+    public abstract void resetEncoders();
+
 }

@@ -94,6 +94,12 @@ public class DrivetrainImpl extends Drivetrain{
     }
 
     @Override
+    public void resetEncoders() {
+        leftGrayhill.reset();
+        rightGrayhill.reset();
+    }
+
+    @Override
     public void setVoltages(double leftVoltages, double rightVoltages) {
         for (CANSparkMax motor : leftMotors) {
             motor.setVoltage(leftVoltages);

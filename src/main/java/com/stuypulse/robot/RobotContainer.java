@@ -26,6 +26,7 @@ public class RobotContainer {
     
     // Subsystem
     public final Pump pump = new Pump();
+
     public final Drivetrain drivetrain = Drivetrain.getInstance();
 
     // Autons
@@ -52,7 +53,7 @@ public class RobotContainer {
     /***************/
 
     private void configureButtonBindings() {
-        driver.getLeftTriggerButton().onTrue(new DrivetrainDriveDistance(1));
+        driver.getDPadDown().onTrue(new DrivetrainDriveDistance(1));
     }
 
     /**************/

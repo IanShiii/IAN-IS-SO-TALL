@@ -29,6 +29,7 @@ public class DrivetrainDriveDistance extends CommandBase{
     @Override
     public void initialize() {
         drivetrain.setGear(Gear.LOW);
+        drivetrain.resetEncoders();
     }
 
     @Override 
