@@ -6,6 +6,7 @@
 package com.stuypulse.robot;
 
 import com.stuypulse.robot.commands.auton.DoNothingAuton;
+import com.stuypulse.robot.commands.drivetrain.DrivetrainDrive;
 import com.stuypulse.robot.commands.drivetrain.DrivetrainDriveDistance;
 import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.subsystems.Pump;
@@ -24,7 +25,7 @@ public class RobotContainer {
     public final Gamepad operator = new AutoGamepad(Ports.Gamepad.OPERATOR);
     
     // Subsystem
-    Pump pump = new Pump();
+    public final Pump pump = new Pump();
     public final Drivetrain drivetrain = Drivetrain.getInstance();
 
     // Autons
@@ -42,14 +43,16 @@ public class RobotContainer {
     /*** DEFAULTS ***/
     /****************/
 
-    private void configureDefaultCommands() {}
+    private void configureDefaultCommands() {
+        drivetrain.setDefaultCommand(new DrivetrainDrive(driver));
+    }
 
     /***************/
     /*** BUTTONS ***/
     /***************/
 
     private void configureButtonBindings() {
-        driver.getLeftTriggerButton().onTrue(new DrivetrainDriveDistance(5));
+        driver.getLeftTriggerButton().onTrue(new DrivetrainDriveDistance(1));
     }
 
     /**************/

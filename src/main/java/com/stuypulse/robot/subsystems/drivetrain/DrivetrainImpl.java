@@ -7,12 +7,17 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
+
 import com.stuypulse.robot.constants.Settings;
 
 public class DrivetrainImpl extends Drivetrain{
 
     private final CANSparkMax[] leftMotors;
     private final CANSparkMax[] rightMotors;
+
+    private final DifferentialDrive drivetrain;
 
     private final DoubleSolenoid doubleSolenoid;
 
@@ -42,6 +47,8 @@ public class DrivetrainImpl extends Drivetrain{
         for (CANSparkMax motor : rightMotors) {
             Motors.Drivetrain.RIGHT.configure(motor);
         }
+
+        drivetrain = new DifferentialDrive(new MotorControllerGroup(leftMotors), new MotorControllerGroup(rightMotors));
 
         doubleSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 0, 1);
 
@@ -79,6 +86,11 @@ public class DrivetrainImpl extends Drivetrain{
 
     public double getRightDistance() {
         return rightGrayhill.getDistance();
+    }
+
+    @Override
+    public void arcadeDrive(double speed, double rotation) {
+        drivetrain.arcadeDrive(speed, rotation, true);
     }
 
     @Override

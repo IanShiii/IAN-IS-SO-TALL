@@ -18,6 +18,8 @@ public abstract class Drivetrain extends SubsystemBase {
 
     public abstract void setGear(Gear gear);
 
+    public abstract void arcadeDrive(double speed, double rotation);
+
     public abstract void setVoltages(double leftVoltages, double rightVoltages);
     public abstract double getLeftDistance();
     public abstract double getRightDistance();
